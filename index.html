@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineMax - Movie App</title>
+
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #101018;
+  color: white;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+header {
+  padding: 18px 6%;
+  background: #191925;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  color: #ff4358;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+  gap: 15px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+}
+
+.search {
+  padding: 12px;
+  border-radius: 20px;
+  border: 1px solid #444;
+  background: #292938;
+  color: white;
+  width: 240px;
+  max-width: 100%;
+}
+
+button {
+  padding: 11px 15px;
+  border: none;
+  border-radius: 7px;
+  background: #ff4358;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:disabled {
+  opacity: .5;
+}
+
+.hero {
+  padding: 55px 6%;
+  background: linear-gradient(120deg, #191925, #35213d);
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.hero p {
+  color: #ccc;
+  line-height: 1.7;
+}
+
+.hero button {
+  margin-top: 20px;
+}
+
+main {
+  padding: 30px 6%;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.filters button {
+  background: #292938;
+}
+
+.filters button.active {
+  background: #ff4358;
+}
+
+.movies {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 18px;
+}
+
+.movie {
+  background: #20202d;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.movie img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+
+.movie-info {
+  padding: 12px;
+}
+
+.movie h3 {
+  font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.rating {
+  color: #ffd166;
+  font-size: 13px;
+}
+
+.muted {
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 7px;
+}
+
+.movie button {
+  width: calc(100% - 24px);
+  margin: 0 12px 12px;
+  font-size: 12px;
+}
+
+.status {
+  color: #ccc;
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: #000d;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.detail {
+  background: #20202d;
+  max-width: 800px;
+  width: 100%;
+  margin: 10px auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.close {
+  background: #444454;
+}
+
+.detail-top {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 20px;
+  padding: 15px;
+}
+
+.detail-poster {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.detail-info h2 {
+  margin-bottom: 10px;
+  overflow-wrap: anywhere;
+}
+
+.detail-info p {
+  color: #ddd;
+  line-height: 1.7;
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.player {
+  padding: 15px;
+}
+
+.player h3 {
+  margin-bottom: 12px;
+}
+
+.video-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: black;
+}
+
+.video-box iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  background: #191925;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 16px 5%;
+  }
+
+  nav {
+    width: 100%;
+  }
+
+  .search {
+    width: 100%;
+  }
+
+  .hero {
+    padding: 40px 5%;
+  }
+
+  .hero h1 {
+    font-size: 29px;
+  }
+
+  main {
+    padding: 25px 5%;
+  }
+
+  .movies {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .detail-top {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .detail-poster {
+    width: 140px;
+    margin: auto;
+    display: block;
+  }
+}
+</style>
+</head>
+
+<body x-data="movieApp()" x-init="init()">
+
+<header>
+  <div class="logo">CineMax 🎬</div>
+
+  <nav>
+    <a href="#" @click.prevent="home()">Beranda</a>
+    <a href="#film">Film</a>
+    <a href="#tentang">Tentang</a>
+  </nav>
+
+  <input
+    class="search"
+    type="search"
+    placeholder="Cari judul film..."
+    x-model="query"
+    @input.debounce.500ms="searchMovies()">
+</header>
+
+<section class="hero">
+  <h1>Temukan Film Favoritmu</h1>
+  <p>
+    Cari film favorit, lihat sinopsis dan rating,
+    lalu tonton trailer yang tersedia.
+  </p>
+
+  <button @click="document.getElementById('film').scrollIntoView()">
+    Jelajahi Film
+  </button>
+</section>
+
+<main id="film">
+  <h2 x-text="heading"></h2>
+
+  <div class="filters">
+    <button
+      :class="{active: genre === 0}"
+      @click="selectGenre(0)">
+      Semua
+    </button>
+
+    <template x-for="g in genres" :key="g.id">
+      <button
+        :class="{active: genre === g.id}"
+        @click="selectGenre(g.id)"
+        x-text="g.name">
+      </button>
+    </template>
+  </div>
+
+  <p class="status" x-show="loading">
+    Memuat film...
+  </p>
+
+  <p class="status" x-show="error" x-text="error"></p>
+
+  <div class="movies">
+    <template x-for="m in movies" :key="m.id">
+      <article class="movie">
+        <img
+          :src="m.poster_path ? imageBase + m.poster_path : placeholder"
+          :alt="m.title || m.name"
+          loading="lazy">
+
+        <div class="movie-info">
+          <h3 x-text="m.title || m.name"></h3>
+
+          <div class="rating">
+            ★ <span x-text="Number(m.vote_average || 0).toFixed(1)"></span>/10
+          </div>
+
+          <p class="muted"
+             x-text="(m.release_date || '').slice(0,4)">
+          </p>
+        </div>
+
+        <button @click="openMovie(m)">
+          ▶ Tonton Trailer
+        </button>
+      </article>
+    </template>
+  </div>
+
+  <p class="status"
+     x-show="!loading && !error && movies.length === 0">
+    Film tidak ditemukan.
+  </p>
+
+  <div style="text-align:center;margin:25px"
+       x-show="movies.length && !query">
+    <button @click="loadMore()" :disabled="loading">
+      Muat Film Lainnya
+    </button>
+  </div>
+</main>
+
+<!-- Detail film dan pemutar video -->
+<div class="modal"
+     x-cloak
+     x-show="selected"
+     @click.self="closeMovie()"
+     @keydown.escape.window="closeMovie()">
+
+  <div class="detail" x-show="selected">
+    <div class="detail-header">
+      <h2>Detail Film</h2>
+      <button class="close" @click="closeMovie()">✕ Tutup</button>
+    </div>
+
+    <div class="detail-top">
+      <img
+        class="detail-poster"
+        :src="selected && selected.poster_path
+          ? imageBase + selected.poster_path : placeholder"
+        alt="Poster film">
+
+      <div class="detail-info">
+        <h2 x-text="selected ? selected.title : ''"></h2>
+
+        <p>
+          ⭐
+          <span x-text="selected
+            ? Number(selected.vote_average || 0).toFixed(1) : ''"></span>/10
+        </p>
+
+        <p>
+          Tanggal rilis:
+          <span x-text="selected ? selected.release_date : ''"></span>
+        </p>
+
+        <p x-text="selected ? selected.overview : ''"></p>
+
+        <p class="muted" x-show="detailLoading">
+          Mencari trailer...
+        </p>
+
+        <p class="muted"
+           x-show="selected && !detailLoading && !trailer">
+          Trailer belum tersedia untuk film ini.
+        </p>
+
+        <button x-show="trailer" @click="playTrailer()">
+          ▶ Putar Video
+        </button>
+
+        <button
+          style="margin-top:8px"
+          @click="openYouTube()">
+          Cari di YouTube
+        </button>
+      </div>
+    </div>
+
+    <div class="player" x-show="trailer">
+      <h3>Pemutar Video</h3>
+
+      <div class="video-box">
+        <iframe
+          x-ref="player"
+          :src="trailer"
+          title="Trailer film"
+          allow="autoplay; encrypted-media; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <p class="muted">
+        Tekan tombol play pada video untuk mulai menonton.
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer id="tentang">
+  <h3>🎬 Tentang CineMax</h3>
+  <p>Katalog film dengan poster, rating, sinopsis, dan trailer.</p>
+  <p>Data film menggunakan TMDB API.</p>
+  <p>Trailer bukan film penuh.</p>
+</footer>
+
+<script>
+function movieApp() {
+  return {
+    apiKey: '44a7652e8b487657389e507ebadf5b76',
+    imageBase: 'https://image.tmdb.org/t/p/w500',
+    placeholder: 'https://placehold.co/500x750/20202d/ffffff?text=No+Poster',
+
+    movies: [],
+    genres: [],
+    genre: 0,
+    query: '',
+    heading: '🔥 Film Populer',
+    loading: false,
+    error: '',
+    page: 1,
+    selected: null,
+    trailer: '',
+    detailLoading: false,
+    requestId: 0,
+
+    async request(path, language = 'id-ID') {
+      const url = new URL(
+        'https://api.themoviedb.org/3' + path
+      );
+
+      url.searchParams.set('api_key', this.apiKey);
+      url.searchParams.set('language', language);
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(
+          'Gagal memuat data TMDB. Periksa koneksi atau API key.'
+        );
+      }
+
+      return await response.json();
+    },
+
+    async init() {
+      await Promise.all([
+        this.loadGenres(),
+        this.home()
+      ]);
+    },
+
+    async loadGenres() {
+      try {
+        const data = await this.request('/genre/movie/list');
+        this.genres = data.genres || [];
+      } catch (e) {
+        this.error = e.message;
+      }
+    },
+
+    async home() {
+      this.query = '';
+      this.genre = 0;
+      this.page = 1;
+      this.heading = '🔥 Film Populer';
+      await this.loadMovies('/movie/popular');
+    },
+
+    async selectGenre(id) {
+      this.genre = id;
+      this.query = '';
+      this.page = 1;
+
+      if (id === 0) {
+        this.heading = '🔥 Film Populer';
+        await this.loadMovies('/movie/popular');
+      } else {
+        const genreName =
+          this.genres.find(g => g.id === id)?.name || 'Film';
+
+        this.heading = '🎞️ ' + genreName;
+        await this.loadMovies('/discover/movie?with_genres=' + id);
+      }
+    },
+
+    async loadMovies(path, append = false) {
+      this.loading = true;
+      this.error = '';
+
+      try {
+        const separator = path.includes('?') ? '&' : '?';
+        const data = await this.request(
+          path + separator + 'page=' + this.page
+        );
+
+        this.movies = append
+          ? [...this.movies, ...(data.results || [])]
+          : (data.results || []);
+      } catch (e) {
+        this.error = e.message;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async searchMovies() {
+      const term = this.query.trim();
+
+      if (!term) {
+        this.page = 1;
+        return this.home();
+      }
+
+      this.genre = 0;
+      this.page = 1;
+      this.heading = '🔎 Hasil Pencarian';
+      this.loading = true;
+      this.error = '';
+
+      try {
+        const data = await this.request(
+          '/search/movie?query=' + encodeURIComponent(term)
+        );
+
+        this.movies = data.results || [];
+      } catch (e) {
+        this.error = e.message;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async loadMore() {
+      if (this.loading) return;
+
+      this.page++;
+
+      if (this.query.trim()) {
+        this.loading = true;
+
+        try {
+          const data = await this.request(
+            '/search/movie?query=' +
+            encodeURIComponent(this.query.trim()) +
+            '&page=' + this.page
+          );
+
+          this.movies = [
+            ...this.movies,
+            ...(data.results || [])
+          ];
+        } catch (e) {
+          this.error = e.message;
+        } finally {
+          this.loading = false;
+        }
+      } else {
+        const path = this.genre
+          ? '/discover/movie?with_genres=' + this.genre
+          : '/movie/popular';
+
+        await this.loadMovies(path, true);
+      }
+    },
+
+    async openMovie(movie) {
+      this.selected = movie;
+      this.trailer = '';
+      this.detailLoading = true;
+
+      const current = ++this.requestId;
+
+      try {
+        let data = await this.request(
+          '/movie/' + movie.id + '/videos'
+        );
+
+        let videos = data.results || [];
+
+        if (!videos.some(v => v.site === 'YouTube' && v.key)) {
+          const english = await this.request(
+            '/movie/' + movie.id + '/videos',
+            'en-US'
+          );
+
+          videos = english.results || [];
+        }
+
+        if (current !== this.requestId) return;
+
+        const video =
+          videos.find(v =>
+            v.site === 'YouTube' &&
+            v.type === 'Trailer' &&
+            v.official &&
+            v.key
+          ) ||
+          videos.find(v =>
+            v.site === 'YouTube' &&
+            v.type === 'Trailer' &&
+            v.key
+          ) ||
+          videos.find(v =>
+            v.site === 'YouTube' && v.key
+          );
+
+        if (video) {
+          this.trailer =
+            'https://www.youtube-nocookie.com/embed/' +
+            encodeURIComponent(video.key);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (current === this.requestId) {
+          this.detailLoading = false;
+        }
+      }
+    },
+
+    playTrailer() {
+      if (!this.trailer) return;
+
+      const separator = this.trailer.includes('?') ? '&' : '?';
+      this.trailer += separator + 'autoplay=1';
+
+      this.$nextTick(() => {
+        this.$refs.player?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      });
+    },
+
+    openYouTube() {
+      const title = this.selected?.title || 'film';
+      const url =
+        'https://www.youtube.com/results?search_query=' +
+        encodeURIComponent(title + ' official trailer');
+
+      window.open(url, '_blank', 'noopener');
+    },
+
+    closeMovie() {
+      this.selected = null;
+      this.trailer = '';
+      this.requestId++;
+    }
+  };
+}
+</script>
+
+</body>
+</html>
